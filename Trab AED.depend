@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1523831268 source:c:\users\davig\desktop\segundo trab lab aed\trab aed\main.cpp
+	<iostream>
+	<stdlib.h>
+	<iostream>
+	<stdio.h>
+	<string.h>
+	<string>
+
