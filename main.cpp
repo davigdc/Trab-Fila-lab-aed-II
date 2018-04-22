@@ -4,12 +4,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <string>
+#include <locale.h>
+
 using namespace std;
 
 struct Materia{
     char nome[50];
     int codigo;
-    int nota;
     char descricao[500];
 };
 
@@ -17,6 +18,11 @@ struct data_nasc{
     int dia;
     int mes;
     int ano;
+};
+struct nota{
+    int aluno_matricula;
+    int cod_materia;
+    int nota;
 };
 
 struct dado_aluno{
@@ -26,88 +32,9 @@ struct dado_aluno{
     char endereco[50];
     int telefone;
     Materia disciplina;
+    nota * notas;
 };
 
-/*
-struct celdupla
-{
-    aluno a ;
-    celdupla *prox, *ant;
-};
-
-struct lista
-{
-    celdupla *primeiro, *ultimo;
-    int tam;
-};
-
-void inicializa (lista *l)
-{
-    l->primeiro=(celdupla*)malloc(sizeof(celdupla));
-    l->primeiro->prox=NULL;
-    l->primeiro->ant=NULL;
-    l->ultimo=l->primeiro;
-    l->tam=0;
-}
-
-bool inserir (lista *l, aluno a, int pos)
-{
-    if(pos<1 || pos>lista->tam+1)
-
-        return false;
-
-    celdupla nova=(celdupla)malloc(sizeof(celdupla));
-    nova->a=a;
-    celdupla*celant=l->primeiro;
-    for(int i=0; i<pos-1; i++)
-
-        celant=celant->prox;
-
-    nova->ant=celant;
-    nova->prox=celprox;
-    celant->prox=nova;
-    if(celprox==NULL)
-
-        l->ultimo=nova;
-
-    else
-
-        celprox->ant=nova;
-
-    l->tam++;
-    return true;
-}
-
-aluno remover(lista *l, int pos)
-{
-    if(pos<1 || pos>l->tam)
-
-        return -1;
-
-    celdupla *celant=l->primeiro;
-    for(int i=0; i<pos-1; i++)
-
-        celant=celant->prox;
-
-    celdupla *velha=celant ->prox;
-    celdupla *celprox=velha->prox;
-    celant->prox=celprox;
-    if(celprox==NULL)
-        lista->ultimo=celant;
-    else
-        celprox->ant=celant;
-    aluno a=velha->a;
-    free(velha);
-    return a;
-}
-
-void finaliza(lista *l)
-{
-    while(!vazia(l))
-        remover(l,1);
-    free(l->primeiro);
-}
-*/
 void imprimir_aluno(dado_aluno *aluno, int n){
     for(int i=0; i<n; i++){
         cout<<"\tDados aluno "<<i+1;
@@ -119,51 +46,96 @@ void imprimir_aluno(dado_aluno *aluno, int n){
         cout<<endl<<endl;
     }
 }
+void imprimir_materias(Materia * materias, int n){
+    for(int i=0; i<n; i++){
+        cout<<"\tDados materia "<<i+1;
+        cout<<"\nCódigo: "<<materias[i].codigo;
+        cout<<"\nMatéria: "<<materias[i].nome;
+        cout<<"\nDescrição: "<<materias[i].descricao;
+        cout<<endl<<endl;
+    }
+}
+int main() {
+    setlocale(LC_ALL,"");
+    int n_alunos=0;
 
+    do{
+        if(n_alunos < 1){
+        cout<<"Quantos alunos serao cadastrados?";
+        cin>>n_alunos;
+        }
+    } while ( n_alunos <= 0 );
 
-using namespace std;
+    dado_aluno *aluno=(dado_aluno*) malloc (n_alunos*sizeof(dado_aluno));
 
-int main()
-{
-int n_alunos=0;
-do{
-    cout<<"Quantos alunos serao cadastrados?";
-    cin>>n_alunos;
-}while(n_alunos<1);
+    for(int i=0; i<n_alunos; i++){
 
-dado_aluno *aluno=(dado_aluno*) malloc (n_alunos*sizeof(dado_aluno));
+        cout<<"\n\t\t Cadastro aluno "<<i+1;
+        cin.ignore();
 
-for(int i=0; i<n_alunos; i++){
-    cout<<"\n\t\t Cadastro aluno "<<i+1;
-    cin.ignore();
-    cout<<"\nMatricula do aluno: ";
-    cin>>aluno[i].matricula;
-    cin.ignore();
-    cout<<"\nNome aluno: ";
-    gets(aluno[i].nome);
-    cout<<"\nData Nascimento (formato dd/mm/aaaa)";
+        cout<<"\nMatricula do aluno: ";
+        cin>>aluno[i].matricula;
+        cin.ignore();
+
+        cout<<"\nNome aluno: ";
+        gets(aluno[i].nome);
+        cin.ignore();
+
+        cout<<"\nData Nascimento (formato dd/mm/aaaa)";
         do{
             cout<<"\nDia (1 a 31): ";
             cin>>aluno[i].data.dia;
-        }while((aluno[i].data.dia < 1) || (aluno[i].data.dia > 31));
+        } while ( (aluno[i].data.dia < 1) || (aluno[i].data.dia > 31) );
 
         do{
             cout<<"\nMes (1 a 12): ";
             cin>>aluno[i].data.mes;
-        }while((aluno[i].data.mes < 1) || (aluno[i].data.mes > 12));
+        } while( (aluno[i].data.mes < 1) || (aluno[i].data.mes > 12) );
 
         do{
             cout<<"\nAno (<2018): ";
             cin>>aluno[i].data.ano;
-        }while(aluno[i].data.ano > 2017);
-    cin.ignore();
-    cout<<"\nEndereco: ";
-    gets(aluno[i].endereco);
-    cout<<"\nTelefone: ";
-    cin>>aluno[i].telefone;
+        } while( aluno[i].data.ano > 2017 );
 
-}
+        cin.ignore();
+
+        cout<<"\nEndereco: ";
+        gets(aluno[i].endereco);
+
+        cout<<"\nTelefone: ";
+        cin>>aluno[i].telefone;
+    }
+
+    int n_materias = 0;
+    do{
+        cout<<"Quantas matérias serão cadastrados?";
+        cin>>n_materias;
+    } while ( n_materias < 1 );
+
+    Materia * materias = (Materia * ) malloc (n_materias*sizeof(Materia));
+
+    for( int i = 0; i < n_materias; i++ ){
+
+        cout<<"\n\t\t Cadastro materia "<<i+1;
+        cin.ignore();
+
+        cout<<"\ncodigo da matéria: ";
+        cin>>materias[i].codigo;
+        cin.ignore();
+
+        cout<<"\nNome materia: ";
+        gets(materias[i].nome);
+        cin.ignore();
+
+        cout<<"\nDescrição: ";
+        gets(materias[i].descricao);
+        cin.ignore();
+    }
+
+    imprimir_materias(materias, n_materias);
     imprimir_aluno(aluno, n_alunos);
+
     free(aluno);
+
     return 0;
 }
