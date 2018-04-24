@@ -214,6 +214,32 @@ void cadastro_de_aluno(dado_aluno * aluno, int n_alunos){
     }
 
 }
+Lista_alunos * openFile(Lista_alunos * l){
+    celula_aluno * aux = (celula_aluno * )malloc(sizeof(celula_aluno));
+    if(alunos == NULL){
+        cout << "não há memoria suficiente";
+    } else {
+        //inicia abertura do arquivo em modo leitura
+        FILE * arq = fopen("dados_aluno.txt", "r");
+        int i = 0;
+        for(int a = 0; arq != EOF; a++){
+            //na primeira repetição atribui os valores de cabeçalho
+            //depois da primeira repetição lê os valores e quarda na Struct
+
+            printf("\n %i %s", a, ")\n " );
+            fscanf
+                ( arq, "%i\t%[^\t]\t"+
+                       "%i[^\t]\t%i[^\t]\t%i[^\t]\t"+
+                       "%[^\t]\t%i[^\t]\t%[^\t]\t",
+                    &aux->aluno->matricula, &aux->aluno->nome,
+                    &aux->aluno->data->dia, &aux->aluno->data->mes, &aux->aluno->data->ano
+                    &aux->aluno->endereco, &aux->aluno->telefone, &aux->aluno->disciplina
+                );
+            i++;
+        }
+    }
+    fclose(arq);
+}
 
 int main() {
 
