@@ -207,7 +207,7 @@ struct Nota{
     int nota;
 };
 
-Lista_alunos * openFile(Lista_alunos * l){
+Lista_alunos * openFile_aluno (Lista_alunos * l){
 
     Celula_aluno * aux = (Celula_aluno * )malloc(sizeof(Celula_aluno));
 
@@ -236,6 +236,26 @@ Lista_alunos * openFile(Lista_alunos * l){
 
     }
 
+}
+
+void arquivo_alunos (FILE *arq, Lista_alunos *L){
+    arq= fopen("dados_aluno.txt", "a+");
+    Celula_aluno *aux=L->Primeiro->Proximo;
+        if (!arq) {
+            perror(strerror(errno)); // inclua os headers  string.h  e  errno.h
+            //return EXIT_FAILURE; // inclua stdlib.h
+        }
+
+        while(aux!=NULL){
+            if(aux!=NULL){
+                fprintf(arq, "%i\t %s\t %i/%i/%i\t %s\t %lld\t\n",
+                        aux->Aluno.Matricula, aux->Aluno.Nome, aux->Aluno.Data.Dia,
+                        aux->Aluno.Data.Mes, aux->Aluno.Data.Ano, aux->Aluno.Endereco,
+                        aux->Aluno.Telefone);
+                aux=aux->Proximo;
+            }
+        }
+    fclose(arq);
 }
 
 void imprimir_notas(Nota * notas, int n){
@@ -327,8 +347,8 @@ int main() {
     Lista_materias * Lista_de_materias = (Lista_materias*) malloc (sizeof(Lista_materias));
     Inicializa_lista_de_materias(Lista_de_materias);
 
-    Lista_notas * lista_de_notas = (Lista_notas*) malloc (sizeof(Lista_notas));
-    inicializa_lista_de_notas(lista_de_notas);
+    //Lista_notas * lista_de_notas = (Lista_notas*) malloc (sizeof(Lista_notas));
+    //inicializa_lista_de_notas(lista_de_notas);
 
     //Fazer menu
     //Fazer switch case 1
@@ -348,6 +368,12 @@ int main() {
     }
     Imprimir_lista_de_alunos(Lista_de_alunos);
 
+    FILE *arq_alunos;
+    arquivo_alunos(arq_alunos, Lista_de_alunos);
+
+
+
+/*
    //Fazer switch case 2
     int n_materias=0;
      do{
@@ -365,7 +391,7 @@ int main() {
         Insere_materias_na_lista(Lista_de_materias, M);
     }
     Imprimir_lista_de_materias(Lista_de_materias);
-
+*/
 
 
 /*
@@ -384,7 +410,7 @@ int main() {
 */
     free(Lista_de_alunos);
     free(Lista_de_materias);
-    free(lista_de_notas);
+    //free(lista_de_notas);
 
     return 0;
 }
