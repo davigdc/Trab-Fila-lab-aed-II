@@ -206,6 +206,35 @@ struct Nota{
     int nota;
 };
 
+Lista_alunos * openFile(Lista_alunos * l){
+
+    Celula_aluno * aux = (Celula_aluno * )malloc(sizeof(Celula_aluno));
+
+    if(aux == NULL){
+        cout << "não há memoria suficiente";
+    } else {
+        //inicia abertura do arquivo em modo leitura
+        FILE * arq = fopen("dados_aluno.txt", "r");
+        int i = 0;
+        for(int a = 0; arq != EOF; a++){
+            //na primeira repetição atribui os valores de cabeçalho
+            //depois da primeira repetição lê os valores e quarda na Struct
+
+            printf("\n %i %s", a, ")\n " );
+            fscanf
+                ( arq, "%i\t%[^\t]\t"+
+                       "%i[^\t]\t%i[^\t]\t%i[^\t]\t"+
+                       "%[^\t]\t%i[^\t]\t%[^\t]\t",
+                    &aux->aluno->matricula, &aux->aluno->nome,
+                    &aux->aluno->data->dia, &aux->aluno->data->mes, &aux->aluno->data->ano
+                    &aux->aluno->endereco, &aux->aluno->telefone, &aux->aluno->disciplina
+                );
+            i++;
+        }
+    }
+    fclose(arq);
+}
+
 void imprimir_notas(Nota * notas, int n){
     for(int i=0; i<n; i++){
         cout<<"\tNota "<<i+1;
@@ -284,61 +313,6 @@ void cadastro_de_notas(Nota * notas,int n_notas){
 }
 
 
-<<<<<<< HEAD
-        cout<<"\nData Nascimento (formato dd/mm/aaaa)";
-        do{
-            cout<<"\nDia (1 a 31): ";
-            cin>>aluno[i].data.dia;
-        } while ( (aluno[i].data.dia < 1) || (aluno[i].data.dia > 31) );
-
-        do{
-            cout<<"\nMes (1 a 12): ";
-            cin>>aluno[i].data.mes;
-        } while( (aluno[i].data.mes < 1) || (aluno[i].data.mes > 12) );
-
-        do{
-            cout<<"\nAno (<2018): ";
-            cin>>aluno[i].data.ano;
-        } while( aluno[i].data.ano > 2017 );
-
-        cin.ignore();
-
-        cout<<"\nEndereco: ";
-        gets(aluno[i].endereco);
-
-        cout<<"\nTelefone: ";
-        cin>>aluno[i].telefone;
-    }
-
-}
-Lista_alunos * openFile(Lista_alunos * l){
-    celula_aluno * aux = (celula_aluno * )malloc(sizeof(celula_aluno));
-    if(alunos == NULL){
-        cout << "não há memoria suficiente";
-    } else {
-        //inicia abertura do arquivo em modo leitura
-        FILE * arq = fopen("dados_aluno.txt", "r");
-        int i = 0;
-        for(int a = 0; arq != EOF; a++){
-            //na primeira repetição atribui os valores de cabeçalho
-            //depois da primeira repetição lê os valores e quarda na Struct
-
-            printf("\n %i %s", a, ")\n " );
-            fscanf
-                ( arq, "%i\t%[^\t]\t"+
-                       "%i[^\t]\t%i[^\t]\t%i[^\t]\t"+
-                       "%[^\t]\t%i[^\t]\t%[^\t]\t",
-                    &aux->aluno->matricula, &aux->aluno->nome,
-                    &aux->aluno->data->dia, &aux->aluno->data->mes, &aux->aluno->data->ano
-                    &aux->aluno->endereco, &aux->aluno->telefone, &aux->aluno->disciplina
-                );
-            i++;
-        }
-    }
-    fclose(arq);
-}
-=======
->>>>>>> 092974f739783171ab8e6121af94e47053ff98e6
 
 int main() {
 
@@ -393,20 +367,16 @@ int main() {
 
 /*
     int n_notas = 0;
-
     do{
         cout<<"Quantas notas serão cadastradas?";
         cin>>n_notas;
     } while ( n_materias < 1 );
-
     Nota * notas = (Nota *) malloc(sizeof(Nota));
     cadastro_de_notas(notas, n_notas);
-
     insere_materias_na_lista(lista_de_materias, materias, n_materias);
     imprimir_materias(materias, n_materias);
     imprimir_aluno(aluno, n_alunos);
     imprimir_notas(notas, n_notas);
-
     free(aluno);
 */
     free(Lista_de_alunos);
