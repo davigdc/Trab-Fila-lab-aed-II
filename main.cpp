@@ -25,8 +25,9 @@ struct Dado_aluno{
     Data_nasc Data;
     char Endereco[50];
     int64_t Telefone;
-
+    int cod_materia[8];
 };
+
 
 struct Celula_aluno{
 
@@ -215,24 +216,26 @@ Lista_alunos * openFile(Lista_alunos * l){
     } else {
         //inicia abertura do arquivo em modo leitura
         FILE * arq = fopen("dados_aluno.txt", "r");
-        int i = 0;
-        for(int a = 0; arq != EOF; a++){
+
+        for(int a = 0; feof(arq); a++){
             //na primeira repetição atribui os valores de cabeçalho
             //depois da primeira repetição lê os valores e quarda na Struct
 
             printf("\n %i %s", a, ")\n " );
             fscanf
-                ( arq, "%i\t%[^\t]\t"+
-                       "%i[^\t]\t%i[^\t]\t%i[^\t]\t"+
-                       "%[^\t]\t%i[^\t]\t%[^\t]\t",
-                    &aux->aluno->matricula, &aux->aluno->nome,
-                    &aux->aluno->data->dia, &aux->aluno->data->mes, &aux->aluno->data->ano
-                    &aux->aluno->endereco, &aux->aluno->telefone, &aux->aluno->disciplina
-                );
-            i++;
+            ( arq,  "%i\t%[^\t]\t%i[^\t]\t%i[^\t]\t%i[^\t]\t%[^\t]\t%lld[^\t]\t%i[^\t]\t%i[^\t]\t%i[^\t]\t%i[^\t]\t%i[^\t]\t%i[^\t]\t%i[^\t]\t%i[^\t]\t",
+                    &aux->Aluno.Matricula, &aux->Aluno.Nome,
+                    &aux->Aluno.Data.Dia, &aux->Aluno.Data.Mes, &aux->Aluno.Data.Ano,
+                    &aux->Aluno.Endereco, &aux->Aluno.Telefone,
+                    &aux->Aluno.cod_materia[0], &aux->Aluno.cod_materia[1],
+                    &aux->Aluno.cod_materia[2], &aux->Aluno.cod_materia[3],
+                    &aux->Aluno.cod_materia[4], &aux->Aluno.cod_materia[5],
+                    &aux->Aluno.cod_materia[6], &aux->Aluno.cod_materia[7]
+            );
         }
+
     }
-    fclose(arq);
+
 }
 
 void imprimir_notas(Nota * notas, int n){
@@ -327,7 +330,7 @@ int main() {
     Lista_notas * lista_de_notas = (Lista_notas*) malloc (sizeof(Lista_notas));
     inicializa_lista_de_notas(lista_de_notas);
 
-        //Fazer menu
+    //Fazer menu
     //Fazer switch case 1
     int n_alunos=0;
     do{
