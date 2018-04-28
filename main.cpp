@@ -76,6 +76,12 @@ cout<<"\n\t\tNumero de alunos cadastrados: "<<L->Tam<<endl;
             cout<<"\nData nascimento: "<<aux->Aluno.Data.Dia<<"/"<<aux->Aluno.Data.Mes<<"/"<<aux->Aluno.Data.Ano;
             cout<<"\nEndereco: "<<aux->Aluno.Endereco;
             cout<<"\nTelefone: "<<aux->Aluno.Telefone;
+            cout<<endl<<"Materias Cadastradas: ";
+            for(int j=0; j<8; j++){
+                if(aux->Aluno.cod_materia[j]>0){
+                    printf(" %i", &aux->Aluno.cod_materia[j]);
+                }
+            }
             i++;
             cout<<endl<<endl;
             aux=aux->Proximo;
@@ -115,11 +121,83 @@ Dado_aluno Cadastro_de_aluno(Dado_aluno A){
 
     cout<<"\nTelefone: ";
     cin>>A.Telefone;
+
+    for(int i=0; i<8; i++){
+        cout<<"Numero de matéria matriculada (Maximo 8 materias - caso nao tenha mais materias digite 0)";
+        cout<<endl<<"Matéria "<<i+1<<": ";
+        cin>>A.cod_materia[i];
+    }
     cout<<endl<<endl;
 
 return A;
 }
 
+
+void openFile_aluno (Lista_alunos * l){
+
+    Celula_aluno * aux = (Celula_aluno * )malloc(sizeof(Celula_aluno));
+
+    if(aux == NULL){
+        cout << "não há memoria suficiente";
+    } else {
+        //inicia abertura do arquivo em modo leitura
+        FILE * arq = fopen("dados_aluno.txt", "r");
+
+        while (!feof(arq)){
+            if(!feof(arq)){
+                fscanf
+                (arq, "%i\t%[^\t]\t%i %i %i\t%[^\t]\t%lld\t%i\t%i\t%i\t%i\t%i\t%i\t%i\t%i",
+                        &aux->Aluno.Matricula, &aux->Aluno.Nome,
+                        &aux->Aluno.Data.Dia, &aux->Aluno.Data.Mes, &aux->Aluno.Data.Ano,
+                        &aux->Aluno.Endereco, &aux->Aluno.Telefone,
+                        &aux->Aluno.cod_materia[0], &aux->Aluno.cod_materia[1],
+                        &aux->Aluno.cod_materia[2], &aux->Aluno.cod_materia[3],
+                        &aux->Aluno.cod_materia[4], &aux->Aluno.cod_materia[5],
+                        &aux->Aluno.cod_materia[6], &aux->Aluno.cod_materia[7]
+                );
+                printf
+                ("%i\t%s\t%i/%i/%i\t%s\t%lld\nMaterias matriculadas: %i, %i, %i, %i, %i, %i, %i, %i\n",
+                        aux->Aluno.Matricula, aux->Aluno.Nome,
+                        aux->Aluno.Data.Dia, aux->Aluno.Data.Mes, aux->Aluno.Data.Ano,
+                        aux->Aluno.Endereco, aux->Aluno.Telefone,
+                        aux->Aluno.cod_materia[0], aux->Aluno.cod_materia[1],
+                        aux->Aluno.cod_materia[2], aux->Aluno.cod_materia[3],
+                        aux->Aluno.cod_materia[4], aux->Aluno.cod_materia[5],
+                        aux->Aluno.cod_materia[6], aux->Aluno.cod_materia[7]);
+
+                insere_alunos_na_lista(l, aux->Aluno);
+
+            } else {
+                cout<<"Fim da desgraca\n";
+            }
+        }
+
+    }
+
+}
+
+
+void Gravar_arquivo_alunos (FILE *arq, Lista_alunos *l){
+    arq= fopen("dados_aluno.txt", "a+");
+    Celula_aluno *aux=l->Primeiro->Proximo;
+        if (!arq) {
+            perror(strerror(errno)); // inclua os headers  string.h  e  errno.h
+            //return EXIT_FAILURE; // inclua stdlib.h
+        }
+
+        while(aux!=NULL){
+            if(aux!=NULL){
+                fprintf(arq, "%i\t%s\t%i %i %i\t%s\t%lld\t%i\t%i\t%i\t%i\t%i\t%i\t%i\t%i",
+                        aux->Aluno.Matricula, aux->Aluno.Nome, aux->Aluno.Data.Dia,
+                        aux->Aluno.Data.Mes, aux->Aluno.Data.Ano, aux->Aluno.Endereco,
+                        aux->Aluno.Telefone, aux->Aluno.cod_materia[0], aux->Aluno.cod_materia[1],
+                        aux->Aluno.cod_materia[2], aux->Aluno.cod_materia[3], aux->Aluno.cod_materia[4],
+                        aux->Aluno.cod_materia[5], aux->Aluno.cod_materia[6], aux->Aluno.cod_materia[7]);
+        aux=aux->Proximo;
+            }
+        }
+    fclose(arq);
+}
 
     //===========================================Fim Procedimentos Lista de Alunos
 
@@ -207,57 +285,6 @@ struct Nota{
     int nota;
 };
 
-Lista_alunos * openFile_aluno (Lista_alunos * l){
-
-    Celula_aluno * aux = (Celula_aluno * )malloc(sizeof(Celula_aluno));
-
-    if(aux == NULL){
-        cout << "não há memoria suficiente";
-    } else {
-        //inicia abertura do arquivo em modo leitura
-        FILE * arq = fopen("dados_aluno.txt", "r");
-
-        for(int a = 0; feof(arq); a++){
-            //na primeira repetição atribui os valores de cabeçalho
-            //depois da primeira repetição lê os valores e quarda na Struct
-
-            printf("\n %i %s", a, ")\n " );
-            fscanf
-            ( arq,  "%i\t%[^\t]\t%i[^\t]\t%i[^\t]\t%i[^\t]\t%[^\t]\t%lld[^\t]\t%i[^\t]\t%i[^\t]\t%i[^\t]\t%i[^\t]\t%i[^\t]\t%i[^\t]\t%i[^\t]\t%i[^\t]\t",
-                    &aux->Aluno.Matricula, &aux->Aluno.Nome,
-                    &aux->Aluno.Data.Dia, &aux->Aluno.Data.Mes, &aux->Aluno.Data.Ano,
-                    &aux->Aluno.Endereco, &aux->Aluno.Telefone,
-                    &aux->Aluno.cod_materia[0], &aux->Aluno.cod_materia[1],
-                    &aux->Aluno.cod_materia[2], &aux->Aluno.cod_materia[3],
-                    &aux->Aluno.cod_materia[4], &aux->Aluno.cod_materia[5],
-                    &aux->Aluno.cod_materia[6], &aux->Aluno.cod_materia[7]
-            );
-        }
-
-    }
-
-}
-
-void arquivo_alunos (FILE *arq, Lista_alunos *L){
-    arq= fopen("dados_aluno.txt", "a+");
-    Celula_aluno *aux=L->Primeiro->Proximo;
-        if (!arq) {
-            perror(strerror(errno)); // inclua os headers  string.h  e  errno.h
-            //return EXIT_FAILURE; // inclua stdlib.h
-        }
-
-        while(aux!=NULL){
-            if(aux!=NULL){
-                fprintf(arq, "%i\t %s\t %i/%i/%i\t %s\t %lld\t\n",
-                        aux->Aluno.Matricula, aux->Aluno.Nome, aux->Aluno.Data.Dia,
-                        aux->Aluno.Data.Mes, aux->Aluno.Data.Ano, aux->Aluno.Endereco,
-                        aux->Aluno.Telefone);
-                aux=aux->Proximo;
-            }
-        }
-    fclose(arq);
-}
-
 void imprimir_notas(Nota * notas, int n){
     for(int i=0; i<n; i++){
         cout<<"\tNota "<<i+1;
@@ -341,17 +368,25 @@ int main() {
 
     setlocale(LC_ALL,"portuguese");
 
-    Lista_alunos * Lista_de_alunos = (Lista_alunos*) malloc (sizeof(Lista_alunos));
-    Inicializa_lista_de_alunos(Lista_de_alunos);
+    Lista_alunos * lista_de_alunos = (Lista_alunos*) malloc (sizeof(Lista_alunos));
+    Inicializa_lista_de_alunos(lista_de_alunos);
 
     Lista_materias * Lista_de_materias = (Lista_materias*) malloc (sizeof(Lista_materias));
     Inicializa_lista_de_materias(Lista_de_materias);
 
     //Lista_notas * lista_de_notas = (Lista_notas*) malloc (sizeof(Lista_notas));
     //inicializa_lista_de_notas(lista_de_notas);
-
+    Dado_aluno Aluno;
+    Aluno= Cadastro_de_aluno(Aluno);
+    insere_alunos_na_lista(lista_de_alunos, Aluno);
+    FILE *arq_alunos;
+    Gravar_arquivo_alunos(arq_alunos, lista_de_alunos);
+    openFile_aluno(lista_de_alunos);
+    cout<<endl<<endl;
+    Imprimir_lista_de_alunos(lista_de_alunos);
     //Fazer menu
     //Fazer switch case 1
+ /*
     int n_alunos=0;
     do{
         if(n_alunos < 1){
@@ -364,16 +399,16 @@ int main() {
         cout<<"\t\tCadastro Aluno "<<i+1;
         Dado_aluno Aluno;
         Aluno= Cadastro_de_aluno(Aluno);
-        insere_alunos_na_lista(Lista_de_alunos, Aluno);
+        insere_alunos_na_lista(lista_de_alunos, Aluno);
     }
-    Imprimir_lista_de_alunos(Lista_de_alunos);
+    Imprimir_lista_de_alunos(lista_de_alunos);
 
     FILE *arq_alunos;
-    arquivo_alunos(arq_alunos, Lista_de_alunos);
+    arquivo_alunos(arq_alunos, lista_de_alunos);
 
 
 
-/*
+
    //Fazer switch case 2
     int n_materias=0;
      do{
@@ -391,9 +426,9 @@ int main() {
         Insere_materias_na_lista(Lista_de_materias, M);
     }
     Imprimir_lista_de_materias(Lista_de_materias);
+
+
 */
-
-
 /*
     int n_notas = 0;
     do{
@@ -408,7 +443,7 @@ int main() {
     imprimir_notas(notas, n_notas);
     free(aluno);
 */
-    free(Lista_de_alunos);
+    free(lista_de_alunos);
     free(Lista_de_materias);
     //free(lista_de_notas);
 
