@@ -132,7 +132,6 @@ Dado_aluno Cadastro_de_aluno(Dado_aluno A){
 return A;
 }
 
-
 void openFile_aluno (Lista_alunos * l){
 
     Celula_aluno * aux = (Celula_aluno * )malloc(sizeof(Celula_aluno));
@@ -174,29 +173,23 @@ void openFile_aluno (Lista_alunos * l){
         }
 
     }
-
+free(aux);
 }
 
-
-void Gravar_arquivo_alunos (FILE *arq, Lista_alunos *l){
+void Gravar_arquivo_alunos (FILE *arq, Dado_aluno aux){
     arq= fopen("dados_aluno.txt", "a+");
-    Celula_aluno *aux=l->Primeiro->Proximo;
         if (!arq) {
             perror(strerror(errno)); // inclua os headers  string.h  e  errno.h
             //return EXIT_FAILURE; // inclua stdlib.h
         }
+            fprintf(arq, "%i\t%s\t%i %i %i\t%s\t%lld\t%i\t%i\t%i\t%i\t%i\t%i\t%i\t%i",
+                        aux.Matricula, aux.Nome, aux.Data.Dia,
+                        aux.Data.Mes, aux.Data.Ano, aux.Endereco,
+                        aux.Telefone, aux.cod_materia[0], aux.cod_materia[1],
+                        aux.cod_materia[2], aux.cod_materia[3], aux.cod_materia[4],
+                        aux.cod_materia[5], aux.cod_materia[6], aux.cod_materia[7]);
 
-        while(aux!=NULL){
-            if(aux!=NULL){
-                fprintf(arq, "%i\t%s\t%i %i %i\t%s\t%lld\t%i\t%i\t%i\t%i\t%i\t%i\t%i\t%i",
-                        aux->Aluno.Matricula, aux->Aluno.Nome, aux->Aluno.Data.Dia,
-                        aux->Aluno.Data.Mes, aux->Aluno.Data.Ano, aux->Aluno.Endereco,
-                        aux->Aluno.Telefone, aux->Aluno.cod_materia[0], aux->Aluno.cod_materia[1],
-                        aux->Aluno.cod_materia[2], aux->Aluno.cod_materia[3], aux->Aluno.cod_materia[4],
-                        aux->Aluno.cod_materia[5], aux->Aluno.cod_materia[6], aux->Aluno.cod_materia[7]);
-        aux=aux->Proximo;
-            }
-        }
+
     fclose(arq);
 }
 
@@ -210,20 +203,17 @@ struct Materia{
     char Descricao[500];
 };
 
-struct Celula_materia
-{
+struct Celula_materia{
     Materia Materia;
     Celula_materia * Proximo;
 };
 
-struct Lista_materias
-{
+struct Lista_materias{
     Celula_materia *Primeiro, *Ultimo;
     int Tam;
 };
 
-void Inicializa_lista_de_materias(Lista_materias * L)
-{
+void Inicializa_lista_de_materias(Lista_materias * L){
     L->Primeiro = (Celula_materia*) malloc (sizeof(Celula_materia));
     L->Primeiro->Proximo = NULL;
     L->Ultimo= L->Primeiro;
@@ -231,8 +221,7 @@ void Inicializa_lista_de_materias(Lista_materias * L)
 
 }
 
-void Insere_materias_na_lista(Lista_materias * L, Materia Materias)
-{
+void Insere_materias_na_lista(Lista_materias * L, Materia Materias){
     Celula_materia *nova= (Celula_materia*) malloc (sizeof(Celula_materia));
     nova->Materia=Materias;
     nova->Proximo=NULL;
@@ -241,7 +230,6 @@ void Insere_materias_na_lista(Lista_materias * L, Materia Materias)
     L->Tam++;
 
 }
-
 
 Materia Cadastro_de_materia(Materia M){
 
@@ -278,25 +266,19 @@ cout<<"\n\t\tNumero de materias cadastrados: "<<L->Tam;
     }
 }
 
-
 void Grava_arquivo_materias (FILE *arq, Materia aux){
     arq= fopen("dados_materia.txt", "a+");
-    //Celula_materia *aux=m->Primeiro->Proximo;
         if (!arq) {
             perror(strerror(errno)); // inclua os headers  string.h  e  errno.h
             //return EXIT_FAILURE; // inclua stdlib.h
         }
-                fprintf(arq, "%i\t%s\t%s\n",
-                        aux.Codigo, aux.Nome, aux.Descricao);
+
+        fprintf(arq, "%i\t%s\t%s\n", aux.Codigo, aux.Nome, aux.Descricao);
 
     fclose(arq);
 }
 
-
 void openFile_materia (Lista_materias * m){
-
-
-
     Celula_materia * aux = (Celula_materia * )malloc(sizeof(Celula_materia));
 
     if(aux == NULL){
@@ -324,12 +306,13 @@ void openFile_materia (Lista_materias * m){
                 }
             }
         }
-
     }
     free(aux);
 }
+
     //===========================================Fim Procedimentos Lista Materias
 
+/*
 void notas (){
 struct Nota{
     int aluno_matricula;
@@ -346,28 +329,18 @@ void imprimir_notas(Nota * notas, int n){
         cout<<endl<<endl;
     }
 }
-/*
-*celulas das listas
-*/
-
 
 struct celula_nota
 {
     Nota nota;
     celula_nota * proximo;
 };
-/*
-*tipos de listas
-*/
 
 struct Lista_notas
 {
     celula_nota * ultimo, * primeiro;
     int tam;
 };
-/*
-*Inicializacao das filas
-*/
 
 void inicializa_lista_de_notas(Lista_notas * L)
 {
@@ -377,9 +350,6 @@ void inicializa_lista_de_notas(Lista_notas * L)
     L->tam = 0;
 
 }
-/*
-*cadastro de materia = insersão de fila
-*/
 
 void insere_notas_na_lista(Lista_notas * L_de_notas, Nota notas)
 {
@@ -390,9 +360,6 @@ void insere_notas_na_lista(Lista_notas * L_de_notas, Nota notas)
     L_de_notas->tam++;
 
 }
-/*
-*Impressao das listas
-*/
 
 void cadastro_de_notas(Nota * notas,int n_notas){
 
@@ -414,7 +381,7 @@ void cadastro_de_notas(Nota * notas,int n_notas){
     }
 }
 }
-
+*/
 
 int main() {
 
