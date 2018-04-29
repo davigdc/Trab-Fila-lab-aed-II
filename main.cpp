@@ -155,6 +155,7 @@ void openFile_aluno (Lista_alunos * l){
                         &aux->Aluno.cod_materia[4], &aux->Aluno.cod_materia[5],
                         &aux->Aluno.cod_materia[6], &aux->Aluno.cod_materia[7]
                 );
+/*
                 printf
                 ("%i\t%s\t%i/%i/%i\t%s\t%lld\nMaterias matriculadas: %i, %i, %i, %i, %i, %i, %i, %i\n",
                         aux->Aluno.Matricula, aux->Aluno.Nome,
@@ -164,7 +165,7 @@ void openFile_aluno (Lista_alunos * l){
                         aux->Aluno.cod_materia[2], aux->Aluno.cod_materia[3],
                         aux->Aluno.cod_materia[4], aux->Aluno.cod_materia[5],
                         aux->Aluno.cod_materia[6], aux->Aluno.cod_materia[7]);
-
+*/
                 insere_alunos_na_lista(l, aux->Aluno);
 
             } else {
@@ -277,8 +278,59 @@ cout<<"\n\t\tNumero de materias cadastrados: "<<L->Tam;
     }
 }
 
+
+void Grava_arquivo_materias (FILE *arq, Materia aux){
+    arq= fopen("dados_materia.txt", "a+");
+    //Celula_materia *aux=m->Primeiro->Proximo;
+        if (!arq) {
+            perror(strerror(errno)); // inclua os headers  string.h  e  errno.h
+            //return EXIT_FAILURE; // inclua stdlib.h
+        }
+                fprintf(arq, "%i\t%s\t%s\n",
+                        aux.Codigo, aux.Nome, aux.Descricao);
+
+    fclose(arq);
+}
+
+
+void openFile_materia (Lista_materias * m){
+
+
+
+    Celula_materia * aux = (Celula_materia * )malloc(sizeof(Celula_materia));
+
+    if(aux == NULL){
+        cout << "não há memoria suficiente";
+    } else {
+        //inicia abertura do arquivo em modo leitura
+        FILE * arq = fopen("dados_materia.txt", "r");
+        if (arq){
+            while (!feof(arq)){
+                if(!feof(arq)){
+                    fscanf
+                    (arq, "%i\t%[^\t]\t%[^\n]\n",
+                            &aux->Materia.Codigo, &aux->Materia.Nome, &aux->Materia.Descricao
+                    );
+    /*
+                    printf
+                    ("%i, %s, %s\n",
+                            aux->Materia.Codigo, aux->Materia.Nome, aux->Materia.Descricao
+                    );
+    */
+                    Insere_materias_na_lista(m, aux->Materia);
+
+                } else {
+                    cout<<"Fim da desgraca\n";
+                }
+            }
+        }
+
+    }
+    free(aux);
+}
     //===========================================Fim Procedimentos Lista Materias
 
+void notas (){
 struct Nota{
     int aluno_matricula;
     int cod_materia;
@@ -361,7 +413,7 @@ void cadastro_de_notas(Nota * notas,int n_notas){
 
     }
 }
-
+}
 
 
 int main() {
@@ -377,10 +429,10 @@ int main() {
     //Lista_notas * lista_de_notas = (Lista_notas*) malloc (sizeof(Lista_notas));
     //inicializa_lista_de_notas(lista_de_notas);
     Dado_aluno Aluno;
-    Aluno= Cadastro_de_aluno(Aluno);
-    insere_alunos_na_lista(lista_de_alunos, Aluno);
+    //Aluno= Cadastro_de_aluno(Aluno);
+    //insere_alunos_na_lista(lista_de_alunos, Aluno);
     FILE *arq_alunos;
-    Gravar_arquivo_alunos(arq_alunos, lista_de_alunos);
+    //Gravar_arquivo_alunos(arq_alunos, lista_de_alunos);
     openFile_aluno(lista_de_alunos);
     cout<<endl<<endl;
     Imprimir_lista_de_alunos(lista_de_alunos);

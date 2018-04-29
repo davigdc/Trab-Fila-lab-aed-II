@@ -1,0 +1,5 @@
+12345	Algoritimo e Estrutura de dados	Codigos da depressao
+45678	Arquitetura de Computadores	Estudos dos boleanos
+14725	Calculo II	Muitas formulas
+25836	Fisica Geral	Jesus me salva
+147852	LAB AOC	Muitos fios
