@@ -89,14 +89,35 @@ cout<<"\n\t\tNumero de alunos cadastrados: "<<L->Tam<<endl;
     }
 }
 
-Dado_aluno Cadastro_de_aluno(Dado_aluno A){
+Dado_aluno Cadastro_de_aluno(Dado_aluno A, Lista_alunos * l){
+
+    bool valido = false;
+    Celula_aluno * aux = (Celula_aluno*) malloc(sizeof(Celula_aluno));
+    aux = l->Primeiro;
 
     cout<<"\nMatricula do aluno: ";
     cin>>A.Matricula;
     cin.ignore();
 
-    cout<<"\nNome aluno: ";
-    gets(A.Nome);
+    while(valido == false){
+        while(aux != NULL){
+            if(A.Matricula == aux->Aluno.Matricula){
+                valido = false;
+                aux = NULL;
+            } else {
+                valido = true;
+                aux = aux->Proximo;
+            }
+        }
+        if(valido == false){
+            aux=l->Primeiro;
+            cout<<"\nMatricula já existe tente novamente: ";
+            cin>>A.Matricula;
+            cin.ignore();
+
+        }
+
+    }
 
     cout<<"\nData Nascimento (formato dd/mm/aaaa)";
         do{
@@ -231,21 +252,41 @@ void Insere_materias_na_lista(Lista_materias * L, Materia Materias){
 
 }
 
-Materia Cadastro_de_materia(Materia M){
+Materia Cadastro_de_materia(Materia M, Lista_materias * L){
 
-        cout<<"\nCodigo da matéria: ";
-        cin>>M.Codigo;
-        cin.ignore();
+    cout<<"\nCodigo da matéria: ";
+    cin>>M.Codigo;
+    cin.ignore();
 
-        cout<<"\nNome materia: ";
-        gets(M.Nome);
+    bool valido = false;
+    Celula_materia * aux_pesquisa = (Celula_materia*) malloc(sizeof(Celula_materia));
+    aux_pesquisa = L->Primeiro;
 
-        cout<<"\nDescrição: ";
-        gets(M.Descricao);
-
-        cout<<endl;
-
-return M;
+    while(valido == false){
+        while(aux_pesquisa != NULL){
+            if(M.Codigo == aux_pesquisa->Materia.Codigo){
+                valido = false;
+                printf("%i = %i ", M.Codigo, aux_pesquisa->Materia.Codigo);
+                aux_pesquisa = NULL;
+            } else {
+                valido = true;
+                printf("%i == %i ", M.Codigo, aux_pesquisa->Materia.Codigo);
+                aux_pesquisa = aux_pesquisa->Proximo;
+            }
+        }
+        if(valido == false){
+            aux_pesquisa = L->Primeiro;
+            cout<<"\nCodigo da matéria já existe tente novamente: ";
+            cin>>M.Codigo;
+            cin.ignore();
+        }
+    }
+    cout<<"\nNome materia: ";
+    gets(M.Nome);
+    cout<<"\nDescrição: ";
+    gets(M.Descricao);
+    cout<<endl;
+    return M;
 }
 
 void Imprimir_lista_de_materias (Lista_materias *L){
@@ -396,13 +437,20 @@ int main() {
     //Lista_notas * lista_de_notas = (Lista_notas*) malloc (sizeof(Lista_notas));
     //inicializa_lista_de_notas(lista_de_notas);
     Dado_aluno Aluno;
-    //Aluno= Cadastro_de_aluno(Aluno);
-    //insere_alunos_na_lista(lista_de_alunos, Aluno);
     FILE *arq_alunos;
+
+    Materia materia;
     //Gravar_arquivo_alunos(arq_alunos, lista_de_alunos);
     openFile_aluno(lista_de_alunos);
+    openFile_materia(Lista_de_materias);
+
     cout<<endl<<endl;
-    Imprimir_lista_de_alunos(lista_de_alunos);
+    Imprimir_lista_de_materias(Lista_de_materias);
+    //Imprimir_lista_de_alunos(lista_de_alunos);
+
+    materia = Cadastro_de_materia(materia, Lista_de_materias);
+    Aluno = Cadastro_de_aluno(Aluno, lista_de_alunos);
+    //insere_alunos_na_lista(lista_de_alunos, Aluno);
     //Fazer menu
     //Fazer switch case 1
  /*
