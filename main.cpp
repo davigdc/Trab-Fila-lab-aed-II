@@ -28,7 +28,6 @@ struct Dado_aluno{
     int cod_materia[8];
 };
 
-
 struct Celula_aluno{
 
     Dado_aluno Aluno;
@@ -353,76 +352,124 @@ void openFile_materia (Lista_materias * m){
 
     //===========================================Fim Procedimentos Lista Materias
 
-/*
-void notas (){
+    //===========================================Procedimentos Lista Notas
+
 struct Nota{
     int aluno_matricula;
     int cod_materia;
     int nota;
 };
 
-void imprimir_notas(Nota * notas, int n){
-    for(int i=0; i<n; i++){
-        cout<<"\tNota "<<i+1;
-        cout<<"\nCódigo de matéria: "<< notas[i].cod_materia;
-        cout<<"\nMatricula: "<<notas[i].aluno_matricula;
-        cout<<"\nNota: "<<notas[i].nota;
-        cout<<endl<<endl;
-    }
-}
-
-struct celula_nota
-{
+struct Celula_nota{
     Nota nota;
-    celula_nota * proximo;
+    Celula_nota * proximo;
 };
 
-struct Lista_notas
-{
-    celula_nota * ultimo, * primeiro;
+struct Lista_notas{
+    Celula_nota * ultimo, * primeiro;
     int tam;
 };
 
-void inicializa_lista_de_notas(Lista_notas * L)
-{
-    L->primeiro = (celula_nota *)malloc(sizeof(celula_nota));
+void inicializa_lista_de_notas(Lista_notas * L){
+    L->primeiro = (Celula_nota *)malloc(sizeof(Celula_nota));
     L->primeiro->proximo = NULL;
     L->ultimo = L->primeiro;
     L->tam = 0;
 
 }
 
-void insere_notas_na_lista(Lista_notas * L_de_notas, Nota notas)
-{
-    celula_nota *nova= (celula_nota*) malloc (sizeof(celula_nota));
+void insere_notas_na_lista(Lista_notas * L_de_notas, Nota notas){
+    Celula_nota *nova= (Celula_nota*) malloc (sizeof(Celula_nota));
     nova->nota=notas;
     nova->proximo=NULL;
+    L_de_notas->ultimo->proximo=nova;
     L_de_notas->ultimo=nova;
     L_de_notas->tam++;
 
 }
 
-void cadastro_de_notas(Nota * notas,int n_notas){
+Nota Cadastro_de_notas(Nota aux){
 
-    for( int i = 0; i < n_notas; i++ ){
-        cout<<"\n\t\t Cadastro nota "<<i+1<<"/";
-        cin.ignore();
+    cout<<"\t\tCadastro de nota: \n";
+    cout<<"Matricula do aluno: ";
+    cin>>aux.aluno_matricula;
 
-        cout<<"\nCodigo da matéria: ";
-        cin>>notas[i].cod_materia;
-        cin.ignore();
+    cout<<"Código da matéria para lançamento de nota: ";
+    cin>>aux.cod_materia;
 
-        cout<<"\nMatricula : ";
-        cin >> notas[i].aluno_matricula;
-        cin.ignore();
+    cout<<"Nota obtida na matéria "<<aux.cod_materia<<": ";
+    cin>>aux.nota;
 
-        cout << "\nNotas: ";
-        cin >> notas[i].nota;
+    cout<<endl<<endl;
 
+return aux;
+}
+
+void Imprimir_lista_de_notas (Lista_notas *L){
+int i=1;
+Celula_nota *aux=L->primeiro->proximo;
+cout<<"Numero de alunos cadastrados: "<<L->tam;
+    while(aux!=NULL){
+        if(aux!=NULL){
+            cout<<endl;
+            cout<<"\t\tDados aluno "<<i;
+            cout<<"\nMatricula aluno: "<<aux->nota.aluno_matricula;
+            cout<<"\nNota na materia: "<<aux->nota.cod_materia;
+            cout<<"\nNota: "<<aux->nota.nota;
+            i++;
+            cout<<endl<<endl;
+            aux=aux->proximo;
+        }
     }
+
 }
-}
+
+void openFile_notas (Lista_notas * l){
+
+    Celula_nota * aux = (Celula_nota *) malloc (sizeof(Celula_nota));
+
+    if(aux == NULL){
+        cout << "\n\t\tNão há memoria suficiente\n\n";
+    } else {
+        //inicia abertura do arquivo em modo leitura
+        FILE * arq = fopen("dados_notas.txt", "r");
+        if (arq){
+            while (!feof(arq)){
+                if(!feof(arq)){
+                    fscanf
+                    (arq, "%i\t%i\%i\n",
+                            &aux->nota.aluno_matricula, &aux->nota.cod_materia, &aux->nota.nota
+                    );
+/*
+                    printf
+                    ("%i\t%i\%i\n",
+                            aux->nota.aluno_matricula, aux->nota.cod_materia, aux->nota.nota);
 */
+                    insere_notas_na_lista(l, aux->nota);
+
+                } else {
+                    cout<<"Fim da desgraca\n";
+                }
+            }
+        }
+    }
+free(aux);
+}
+
+void Gravar_arquivo_notas (FILE *arq, Nota aux){
+    arq= fopen("dados_notas.txt", "a+");
+        if (!arq) {
+            perror(strerror(errno)); // inclua os headers  string.h  e  errno.h
+            //return EXIT_FAILURE; // inclua stdlib.h
+        }
+            fprintf(arq, "%i\t%i\t%i\n", aux.aluno_matricula, aux.cod_materia, aux.nota);
+
+
+    fclose(arq);
+}
+
+    //=========================================== Fim Procedimentos Lista Notas
+
 
 int main() {
 
@@ -434,26 +481,30 @@ int main() {
     Lista_materias * Lista_de_materias = (Lista_materias*) malloc (sizeof(Lista_materias));
     Inicializa_lista_de_materias(Lista_de_materias);
 
-    //Lista_notas * lista_de_notas = (Lista_notas*) malloc (sizeof(Lista_notas));
-    //inicializa_lista_de_notas(lista_de_notas);
-    Dado_aluno Aluno;
-    FILE *arq_alunos;
+    Lista_notas * lista_de_notas = (Lista_notas*) malloc (sizeof(Lista_notas));
+    inicializa_lista_de_notas(lista_de_notas);
 
-    Materia materia;
-    //Gravar_arquivo_alunos(arq_alunos, lista_de_alunos);
-    openFile_aluno(lista_de_alunos);
-    openFile_materia(Lista_de_materias);
 
-    cout<<endl<<endl;
-    Imprimir_lista_de_materias(Lista_de_materias);
-    //Imprimir_lista_de_alunos(lista_de_alunos);
 
-    materia = Cadastro_de_materia(materia, Lista_de_materias);
-    Aluno = Cadastro_de_aluno(Aluno, lista_de_alunos);
+
+ /*
+    FILE *arq_notas;
+    int n_notas=0;
+    cout<<"Quantas notas serao inseridos? ";
+    cin>>n_notas;
+
+    for(int i=0; i<n_notas; i++){
+        Nota aux;
+        aux= Cadastro_de_notas(aux);
+        insere_notas_na_lista(lista_de_notas, aux);
+        Gravar_arquivo_notas(arq_notas, aux);
+    }
+    Imprimir_lista_de_notas(lista_de_notas);
+
     //insere_alunos_na_lista(lista_de_alunos, Aluno);
     //Fazer menu
     //Fazer switch case 1
- /*
+
     int n_alunos=0;
     do{
         if(n_alunos < 1){
@@ -472,9 +523,6 @@ int main() {
 
     FILE *arq_alunos;
     arquivo_alunos(arq_alunos, lista_de_alunos);
-
-
-
 
    //Fazer switch case 2
     int n_materias=0;
@@ -496,23 +544,10 @@ int main() {
 
 
 */
-/*
-    int n_notas = 0;
-    do{
-        cout<<"Quantas notas serão cadastradas?";
-        cin>>n_notas;
-    } while ( n_materias < 1 );
-    Nota * notas = (Nota *) malloc(sizeof(Nota));
-    cadastro_de_notas(notas, n_notas);
-    insere_materias_na_lista(lista_de_materias, materias, n_materias);
-    imprimir_materias(materias, n_materias);
-    imprimir_aluno(aluno, n_alunos);
-    imprimir_notas(notas, n_notas);
-    free(aluno);
-*/
+
     free(lista_de_alunos);
     free(Lista_de_materias);
-    //free(lista_de_notas);
+    free(lista_de_notas);
 
     return 0;
 }
