@@ -306,7 +306,7 @@ cout<<"\n\t\tNumero de materias cadastrados: "<<L->Tam;
     }
 }
 
-void Grava_arquivo_materias (FILE *arq, Materia aux){
+void Gravar_arquivo_materias (FILE *arq, Materia aux){
     arq= fopen("dados_materia.txt", "a+");
         if (!arq) {
             perror(strerror(errno)); // inclua os headers  string.h  e  errno.h
@@ -408,11 +408,11 @@ return aux;
 void Imprimir_lista_de_notas (Lista_notas *L){
 int i=1;
 Celula_nota *aux=L->primeiro->proximo;
-cout<<"Numero de alunos cadastrados: "<<L->tam;
+cout<<"\n\t\tNumero de alunos cadastrados: "<<L->tam;
     while(aux!=NULL){
         if(aux!=NULL){
             cout<<endl;
-            cout<<"\t\tDados aluno "<<i;
+            cout<<"\tDados aluno "<<i;
             cout<<"\nMatricula aluno: "<<aux->nota.aluno_matricula;
             cout<<"\nNota na materia: "<<aux->nota.cod_materia;
             cout<<"\nNota: "<<aux->nota.nota;
@@ -475,75 +475,167 @@ int main() {
 
     setlocale(LC_ALL,"portuguese");
 
-    Lista_alunos * lista_de_alunos = (Lista_alunos*) malloc (sizeof(Lista_alunos));
-    Inicializa_lista_de_alunos(lista_de_alunos);
-
     Lista_materias * Lista_de_materias = (Lista_materias*) malloc (sizeof(Lista_materias));
     Inicializa_lista_de_materias(Lista_de_materias);
+    FILE *arq_materias;
+    openFile_materia(Lista_de_materias);
+
+    Lista_alunos * lista_de_alunos = (Lista_alunos*) malloc (sizeof(Lista_alunos));
+    Inicializa_lista_de_alunos(lista_de_alunos);
+    FILE *arq_alunos;
+    openFile_aluno(lista_de_alunos);
 
     Lista_notas * lista_de_notas = (Lista_notas*) malloc (sizeof(Lista_notas));
     inicializa_lista_de_notas(lista_de_notas);
-
-
-
-
- /*
     FILE *arq_notas;
-    int n_notas=0;
-    cout<<"Quantas notas serao inseridos? ";
-    cin>>n_notas;
+    openFile_notas(lista_de_notas);
 
-    for(int i=0; i<n_notas; i++){
-        Nota aux;
-        aux= Cadastro_de_notas(aux);
-        insere_notas_na_lista(lista_de_notas, aux);
-        Gravar_arquivo_notas(arq_notas, aux);
-    }
-    Imprimir_lista_de_notas(lista_de_notas);
+    int n_materias=0, n_alunos=0, n_notas=0;
+    int menu;
 
-    //insere_alunos_na_lista(lista_de_alunos, Aluno);
-    //Fazer menu
-    //Fazer switch case 1
-
-    int n_alunos=0;
     do{
-        if(n_alunos < 1){
-        cout<<"Quantos alunos serao cadastrados?";
-        cin>>n_alunos;
-        }
-    } while ( n_alunos <= 0 );
-
-    for(int i=0; i<n_alunos; i++){
-        cout<<"\t\tCadastro Aluno "<<i+1;
-        Dado_aluno Aluno;
-        Aluno= Cadastro_de_aluno(Aluno);
-        insere_alunos_na_lista(lista_de_alunos, Aluno);
+    printf("\t----> Opções disponíveis: <----\n[1]-> Cadastrar materias ou alunos;\n[2]-> Inserir nota;\n[3]-> Pesquisas;\n[4]-> Imprimir;\n[5]-> Sair.\nEntrada: ");
+    cin>>menu;
+    if(menu==5){
+        break;
     }
-    Imprimir_lista_de_alunos(lista_de_alunos);
-
-    FILE *arq_alunos;
-    arquivo_alunos(arq_alunos, lista_de_alunos);
-
-   //Fazer switch case 2
-    int n_materias=0;
-     do{
-        if(n_materias < 1){
-        cout<<"Quantas materias serao cadastradas? ";
-        cin>>n_materias;
-        }
-    } while ( n_materias <= 0 );
-
-
-    for(int i=0; i<n_materias; i++){
-        cout<<"\t\tCadastro Materia "<<i+1;
-        Materia M;
-        M= Cadastro_de_materia(M);
-        Insere_materias_na_lista(Lista_de_materias, M);
+    if(menu < 1 || menu > 4){
+        cout<<"\t\tOpção inválida, digite novamente...\n";
     }
-    Imprimir_lista_de_materias(Lista_de_materias);
 
+    switch(menu){
 
-*/
+    case 1:
+
+        int op1;
+        do{
+        cout<<endl;
+        printf("\t--> Cadastrar materias ou alunos: <--\n[1]-> Cadastrar Materia;\n[2]-> Cadastrar Aluno; \n[3]-> Voltar;\nEntrada: ");
+        cin>>op1;
+        if(op1 < 1 || op1 > 3){
+            cout<<"Opção inválida, digite novamente...\n";
+        }
+
+        switch(op1){
+            case 1:
+                cout<<"Quantas materias serao inseridos? ";
+                cin>>n_materias;
+
+                for(int i=0; i<n_materias; i++){
+                    Materia aux_m;
+                    aux_m= Cadastro_de_materia(aux_m, Lista_de_materias);
+                    Insere_materias_na_lista(Lista_de_materias, aux_m);
+                    Gravar_arquivo_materias(arq_materias, aux_m);
+                }
+            break;
+
+            case 2:
+                cout<<"Quantos alunos serao inseridos? ";
+                cin>>n_alunos;
+
+                for(int i=0; i<n_alunos; i++){
+                    Dado_aluno aux_a;
+                    aux_a= Cadastro_de_aluno(aux_a, lista_de_alunos);
+                    insere_alunos_na_lista(lista_de_alunos, aux_a);
+                    Gravar_arquivo_alunos(arq_notas, aux_a);
+                }
+            break;
+        }
+
+        }while(op1!=3);
+        cout<<endl;
+
+    break;
+
+    case 2:
+
+        int op2;
+        do{
+        cout<<endl;
+        printf("\t--> Inserir nota: <--\n[1]-> Inserir nota;\n[2]-> Voltar;\nEntrada: ");
+        cin>>op1;
+        if(op1 < 1 || op1 > 2){
+            cout<<"Opção inválida, digite novamente...\t";
+        }
+
+        switch(op1){
+            case 1:
+                cout<<"Quantas notas serao inseridos? ";
+                cin>>n_notas;
+
+                for(int i=0; i<n_notas; i++){
+                    Nota aux;
+                    aux= Cadastro_de_notas(aux);
+                    insere_notas_na_lista(lista_de_notas, aux);
+                    Gravar_arquivo_notas(arq_notas, aux);
+                }
+            break;
+        }
+
+        }while(op1!=2);
+        cout<<endl;
+
+    break;
+
+    case 3:
+        int op3;
+        do{
+        cout<<endl;
+        printf("\t--> Pesquisas: <--\n[1]-> Notas de uma disciplina;\n[2]-> Nome dos alunos que foram aprovados em uma disciplina;\n[3]-> Maior e menor nota, em uma disciplina;\n[4]-> Voltar;\nEntrada: ");
+        cin>>op3;
+        if(op3 < 1 || op3 > 4){
+            cout<<"Opção inválida, digite novamente...\n";
+        }
+
+        switch(op3){
+            case 1:
+                cout<<"\nListar as notas de todos os alunos de uma determinada disciplina\n";
+            break;
+
+            case 2:
+                cout<<"\nListar quais os alunos (pelo nome) foram reprovados (leve em consideração mínimo de 60 pontos para aprovação) em uma determinada disciplina.\n";
+            break;
+
+            case 3:
+                cout<<"\nListar a maior e a menor nota obtida em cada disciplina.\n";
+            break;
+        }
+
+        }while(op3!=4);
+        cout<<endl;
+    break;
+
+    case 4:
+        int op4;
+        do{
+        cout<<endl;
+        printf("\t--> Imprimir: <--\n[1]-> Lista de matérias;\n[2]-> Lista de alunos;\n[3]-> Lista de notas;\n[4]-> Voltar;\nEntrada: ");
+        cin>>op4;
+        if(op4 < 1 || op4 > 4){
+            cout<<"Opção inválida, digite novamente...\n";
+        }
+
+        switch(op4){
+            case 1:
+                Imprimir_lista_de_materias(Lista_de_materias);
+            break;
+
+            case 2:
+                Imprimir_lista_de_alunos(lista_de_alunos);
+            break;
+
+            case 3:
+                Imprimir_lista_de_notas(lista_de_notas);
+            break;
+        }
+
+        }while(op4!=4);
+        cout<<endl;
+    break;
+
+    }
+    }while(menu!=5);
+
 
     free(lista_de_alunos);
     free(Lista_de_materias);
