@@ -388,18 +388,123 @@ void insere_notas_na_lista(Lista_notas * L_de_notas, Nota notas){
 
 }
 
-Nota Cadastro_de_notas(Nota aux){
+bool nota_ja_cadastrada(Lista_notas * l_de_notas, int matricula, int cod_materia){
+
+    Celula_nota * aux_pesquisa_matricula = (Celula_nota*)malloc(sizeof(Celula_nota));
+    aux_pesquisa_matricula = l_de_notas->primeiro->proximo;
+
+    while(aux_pesquisa_matricula != NULL){
+        if( (aux_pesquisa_matricula->nota.aluno_matricula == matricula ) && ( aux_pesquisa_matricula->nota.cod_materia == cod_materia) ){
+
+            return true;
+        } else {
+            aux_pesquisa_matricula = aux_pesquisa_matricula->proximo;
+        }
+    }
+    return false;
+}
+
+Nota Cadastro_de_notas(Nota aux, Lista_notas * l_notas, Lista_materias * l_materias, Lista_alunos * l_alunos ){
 
     cout<<"\t\tCadastro de nota: \n";
     cout<<"Matricula do aluno: ";
     cin>>aux.aluno_matricula;
 
+    bool valido = false;
+    bool valido_materia_aluno = false;
+    Celula_aluno * aux_pesquisa_aluno = (Celula_aluno*) malloc(sizeof(Celula_aluno));
+    aux_pesquisa_aluno = l_alunos->Primeiro;
+
+    while(valido == false){
+        while(aux_pesquisa_aluno != NULL){
+            if(aux.aluno_matricula == aux_pesquisa_aluno->Aluno.Matricula){
+                valido = true;
+                aux_pesquisa_aluno = NULL;
+            } else {
+                valido = false;
+                aux_pesquisa_aluno = aux_pesquisa_aluno->Proximo;
+            }
+        }
+        if(valido == false){
+            aux_pesquisa_aluno = l_alunos->Primeiro;
+            cout<<"\nMatricula não existe tente novamente: ";
+            cin>>aux.aluno_matricula;
+            cin.ignore();
+        }
+    }
+
     cout<<"Código da matéria para lançamento de nota: ";
     cin>>aux.cod_materia;
 
+    while(nota_ja_cadastrada(l_notas, aux.aluno_matricula, aux.cod_materia)){
+        cout<<"Nota já lançada para o aluno: ";
+        cin>>aux.cod_materia;
+    }
+
+    string menssagem = "\nCodigo da matéria não cadastrada, tente novamente: ";
+
+    valido = false;
+    Celula_materia * aux_pesquisa_materia = (Celula_materia*) malloc(sizeof(Celula_materia));
+    aux_pesquisa_materia = l_materias->Primeiro->Proximo;
+
+    while(valido == false && valido_materia_aluno == false){
+        while(aux_pesquisa_materia != NULL){
+            if(aux.cod_materia == aux_pesquisa_materia->Materia.Codigo){
+                valido = true;
+                aux_pesquisa_aluno = l_alunos->Primeiro->Proximo;
+                while(aux_pesquisa_aluno != NULL ){
+                        cout<<"entrou while ";
+
+                    for(int i=0; i < 8; i++){
+                        cout<<"entrou for ";
+
+                        if( (aux_pesquisa_aluno->Aluno.cod_materia[i] == aux.cod_materia) && (aux_pesquisa_aluno->Aluno.Matricula == aux.aluno_matricula) ){
+                            aux_pesquisa_aluno = NULL;
+                            aux_pesquisa_materia = NULL;
+                            i = 1000;
+                            valido_materia_aluno = true;
+                            valido = true;
+                            cout<<"achou";
+
+                        }
+                        cout<<"fim for ";
+                    }
+
+                    if(aux_pesquisa_aluno != NULL){aux_pesquisa_aluno = aux_pesquisa_aluno->Proximo;}
+                    cout<<"fim while \n";
+                }
+                if(valido_materia_aluno == false){
+                    valido = false;
+                    menssagem = "\nAluno não cadastrado nessa matéria, tente novamente: ";
+                    aux_pesquisa_materia = aux_pesquisa_materia->Proximo;
+                }
+                if(valido_materia_aluno == true){
+                    valido = true;
+                    aux_pesquisa_materia = NULL;
+                }
+
+            } else {
+                valido = false;
+                menssagem = "\nCodigo da matéria não cadastrada, tente novamente:";
+                //printf("%i == %i ", aux.cod_materia, aux_pesquisa_materia->Materia.Codigo);
+                aux_pesquisa_materia = aux_pesquisa_materia->Proximo;
+            }
+        }
+        if(valido == false || valido_materia_aluno == false){
+            aux_pesquisa_materia = l_materias->Primeiro;
+            cout<<menssagem;
+            cin>>aux.cod_materia;
+            cin.ignore();
+            while(nota_ja_cadastrada(l_notas, aux.aluno_matricula, aux.cod_materia)){
+                cout<<"Nota já lançada para o aluno: ";
+                cin>>aux.cod_materia;
+            }
+        }
+    }
+do{
     cout<<"Nota obtida na matéria "<<aux.cod_materia<<": ";
     cin>>aux.nota;
-
+} while ( aux.nota < 0 && aux.nota > 100 );
     cout<<endl<<endl;
 
 return aux;
@@ -569,7 +674,7 @@ int main() {
 
                 for(int i=0; i<n_notas; i++){
                     Nota aux;
-                    aux= Cadastro_de_notas(aux);
+                    aux = Cadastro_de_notas(aux, lista_de_notas, Lista_de_materias, lista_de_alunos);
                     insere_notas_na_lista(lista_de_notas, aux);
                     Gravar_arquivo_notas(arq_notas, aux);
                 }
