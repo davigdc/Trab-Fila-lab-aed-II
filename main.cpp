@@ -453,25 +453,17 @@ Nota Cadastro_de_notas(Nota aux, Lista_notas * l_notas, Lista_materias * l_mater
                 valido = true;
                 aux_pesquisa_aluno = l_alunos->Primeiro->Proximo;
                 while(aux_pesquisa_aluno != NULL ){
-                        cout<<"entrou while ";
-
                     for(int i=0; i < 8; i++){
-                        cout<<"entrou for ";
-
                         if( (aux_pesquisa_aluno->Aluno.cod_materia[i] == aux.cod_materia) && (aux_pesquisa_aluno->Aluno.Matricula == aux.aluno_matricula) ){
                             aux_pesquisa_aluno = NULL;
                             aux_pesquisa_materia = NULL;
                             i = 1000;
                             valido_materia_aluno = true;
                             valido = true;
-                            cout<<"achou";
-
                         }
-                        cout<<"fim for ";
                     }
 
                     if(aux_pesquisa_aluno != NULL){aux_pesquisa_aluno = aux_pesquisa_aluno->Proximo;}
-                    cout<<"fim while \n";
                 }
                 if(valido_materia_aluno == false){
                     valido = false;
@@ -482,7 +474,6 @@ Nota Cadastro_de_notas(Nota aux, Lista_notas * l_notas, Lista_materias * l_mater
                     valido = true;
                     aux_pesquisa_materia = NULL;
                 }
-
             } else {
                 valido = false;
                 menssagem = "\nCodigo da matéria não cadastrada, tente novamente:";
@@ -496,18 +487,17 @@ Nota Cadastro_de_notas(Nota aux, Lista_notas * l_notas, Lista_materias * l_mater
             cin>>aux.cod_materia;
             cin.ignore();
             while(nota_ja_cadastrada(l_notas, aux.aluno_matricula, aux.cod_materia)){
-                cout<<"Nota já lançada para o aluno: ";
+                cout<<"Nota já lançada para o aluno, tente novamente: ";
                 cin>>aux.cod_materia;
             }
         }
     }
-do{
-    cout<<"Nota obtida na matéria "<<aux.cod_materia<<": ";
-    cin>>aux.nota;
-} while ( aux.nota < 0 && aux.nota > 100 );
+    do{
+        cout<<"Nota obtida na matéria "<<aux.cod_materia<<": ";
+        cin>>aux.nota;
+    } while ( aux.nota < 0 && aux.nota > 100 );
     cout<<endl<<endl;
-
-return aux;
+    return aux;
 }
 
 void Imprimir_lista_de_notas (Lista_notas *L){
