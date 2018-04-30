@@ -530,14 +530,18 @@ int main() {
             break;
 
             case 2:
-                cout<<"Quantos alunos serao inseridos? ";
-                cin>>n_alunos;
+                if(Lista_de_materias->Tam==0){
+                    cout<<"\n\tCadastrar matérias primeiro!\n";
+                }else{
+                    cout<<"Quantos alunos serao inseridos? ";
+                    cin>>n_alunos;
 
-                for(int i=0; i<n_alunos; i++){
-                    Dado_aluno aux_a;
-                    aux_a= Cadastro_de_aluno(aux_a, lista_de_alunos);
-                    insere_alunos_na_lista(lista_de_alunos, aux_a);
-                    Gravar_arquivo_alunos(arq_notas, aux_a);
+                    for(int i=0; i<n_alunos; i++){
+                        Dado_aluno aux_a;
+                        aux_a= Cadastro_de_aluno(aux_a, lista_de_alunos);
+                        insere_alunos_na_lista(lista_de_alunos, aux_a);
+                        Gravar_arquivo_alunos(arq_notas, aux_a);
+                    }
                 }
             break;
         }
